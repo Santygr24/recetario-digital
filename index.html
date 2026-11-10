@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#213b31">
+
+    <meta name="description"
+        content="Recetario Digital: encontrá, organizá y compartí recetas de cocina.">
+
+    <title>Recetario Digital</title>
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Biblioteca de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Configuración -->
+    <script src="js/config.js" defer></script>
+
+    <!-- JavaScript principal -->
+    <script src="js/app.js" defer></script>
+
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="site-header">
+
+        <div class="container header-content">
+
+            <a class="brand" href="#inicio">
+
+                <span class="brand-mark">R</span>
+
+                <span>
+                    Recetario<span class="brand-light">Digital</span>
+                </span>
+
+            </a>
+
+            <nav class="main-nav">
+
+                <a href="#recetas">Recetas</a>
+
+                <a href="#sobre-el-proyecto">Sobre el proyecto</a>
+
+            </nav>
+
+            <button
+                class="button button-primary header-button"
+                id="openAddBtn"
+                type="button">
+
+                <span>＋</span> Agregar receta
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+
+        <!-- PORTADA -->
+        <section class="hero" id="inicio">
+
+            <div class="container hero-content">
+
+                <p class="eyebrow">
+                    UN ESPACIO PARA COMPARTIR SABORES
+                </p>
+
+                <h1>
+                    ¿Qué cocinamos <em>hoy?</em>
+                </h1>
+
+                <p class="hero-description">
+                    Encontrá inspiración, descubrí nuevas preparaciones
+                    y guardá tus recetas favoritas en un solo lugar.
+                </p>
+
+
+                <!-- BUSCADOR -->
+                <div class="search-box">
+
+                    <span class="search-icon">⌕</span>
+
+                    <label class="visually-hidden" for="searchInput">
+                        Buscar recetas
+                    </label>
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Buscá una receta..."
+                        autocomplete="off">
+
+                    <span class="search-hint">
+                        Por nombre
+                    </span>
+
+                </div>
+
+                <div class="hero-note">
+
+                    <span class="note-dot"></span>
+
+                    Recetas simples para todos los días
+
+                </div>
+
+            </div>
+
+            <div class="hero-decoration hero-decoration-one">✳</div>
+
+            <div class="hero-decoration hero-decoration-two">✽</div>
+
+        </section>
+
+
+        <!-- SECCIÓN DE RECETAS -->
+        <section class="section recipes-section" id="recetas">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow eyebrow-dark">
+                            NUESTRO RECETARIO
+                        </p>
+
+                        <h2>Explorá las recetas</h2>
+
+                        <p class="section-subtitle">
+                            Elegí una categoría o buscá algo rico para preparar.
+                        </p>
+
+                    </div>
+
+                    <div class="recipe-count" id="recipeCount">
+                        Cargando recetas...
+                    </div>
+
+                </div>
+
+
+                <!-- FILTROS DE CATEGORÍAS -->
+                <div class="category-list" id="categoryFilters">
+
+                    <button
+                        class="category-button is-active"
+                        type="button"
+                        data-category="Todas"
+                        aria-pressed="true">
+
+                        Todas
+
+                    </button>
+
+                    <button
+                        class="category-button"
+                        type="button"
+                        data-category="Comidas"
+                        aria-pressed="false">
+
+                        🍝 Comidas
+
+                    </button>
+
+                    <button
+                        class="category-button"
+                        type="button"
+                        data-category="Postres"
+                        aria-pressed="false">
+
+                        🍰 Postres
+
+                    </button>
+
+                    <button
+                        class="category-button"
+                        type="button"
+                        data-category="Desayunos"
+                        aria-pressed="false">
+
+                        ☕ Desayunos
+
+                    </button>
+
+                    <button
+                        class="category-button"
+                        type="button"
+                        data-category="Bebidas"
+                        aria-pressed="false">
+
+                        🥤 Bebidas
+
+                    </button>
+
+                </div>
+
+
+                <!-- TARJETAS DE RECETAS -->
+                <div
+                    class="recipe-grid"
+                    id="recipesGrid"
+                    aria-live="polite">
+
+                </div>
+
+
+                <!-- MENSAJE CUANDO NO HAY RECETAS -->
+                <div class="empty-state" id="emptyState" hidden>
+
+                    <div class="empty-icon">🥣</div>
+
+                    <h3 id="emptyTitle">
+                        Todavía no hay recetas
+                    </h3>
+
+                    <p id="emptyMessage">
+                        Sé el primero en agregar una preparación al recetario.
+                    </p>
+
+                    <button
+                        class="button button-primary"
+                        id="emptyAddBtn"
+                        type="button">
+
+                        Agregar primera receta
+
+                    </button>
+
+                </div>
+
+
+                <!-- ESTADO DE LA CONEXIÓN -->
+                <p class="connection-status" id="connectionStatus" role="status"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SOBRE EL PROYECTO -->
+        <section class="about-section" id="sobre-el-proyecto">
+
+            <div class="container about-content">
+
+                <div class="about-icon">
+                    ♡
+                </div>
+
+                <div>
+
+                    <p class="eyebrow eyebrow-dark">
+                        SOBRE EL PROYECTO
+                    </p>
+
+                    <h2>
+                        Las recetas se disfrutan más cuando se comparten.
+                    </h2>
+
+                    <p>
+                        Recetario Digital es una propuesta para reunir recetas
+                        de cocina en un espacio simple y organizado.
+
+                        Cualquier persona puede consultar las preparaciones
+                        disponibles y aportar una receta nueva.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="site-footer">
+
+        <div class="container footer-content">
+
+            <a class="brand brand-footer" href="#inicio">
+
+                <span class="brand-mark">R</span>
+
+                <span>
+                    Recetario<span class="brand-light">Digital</span>
+                </span>
+
+            </a>
+
+            <p>
+                Un proyecto web de Programación Estructurada.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- VENTANA PARA CONSULTAR UNA RECETA -->
+    <dialog class="modal" id="recipeDialog">
+
+        <div class="modal-header">
+
+            <span class="modal-kicker" id="detailCategory">
+                RECETA
+            </span>
+
+            <button
+                class="icon-button"
+                id="closeDetailBtn"
+                type="button"
+                aria-label="Cerrar">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="detail-hero-icon" id="detailIcon">
+            🍽️
+        </div>
+
+        <h2 id="detailTitle">
+            Nombre de la receta
+        </h2>
+
+        <p class="detail-date" id="detailDate"></p>
+
+
+        <div class="detail-columns">
+
+            <section>
+
+                <h3>Ingredientes</h3>
+
+                <ul class="ingredient-list" id="detailIngredients">
+
+                </ul>
+
+            </section>
+
+
+            <section>
+
+                <h3>Preparación</h3>
+
+                <ol class="preparation-list" id="detailPreparation">
+
+                </ol>
+
+            </section>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+        <button
+           class="button button-danger"
+            id="deleteRecipeBtn"
+           type="button">
+
+           Eliminar receta
+
+        </button>
+
+       <button
+          class="button button-secondary"
+          id="detailDoneBtn"
+          type="button">
+
+          Cerrar
+
+       </button>
+
+        </div>
+
+    </dialog>
+
+
+    <!-- VENTANA PARA AGREGAR UNA RECETA -->
+    <dialog class="modal form-modal" id="addDialog">
+
+        <div class="modal-header">
+
+            <span class="modal-kicker">
+                COMPARTÍ TU COCINA
+            </span>
+
+            <button
+                class="icon-button"
+                id="closeAddBtn"
+                type="button"
+                aria-label="Cerrar">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <h2 id="addTitle">
+            Agregar una receta
+        </h2>
+
+        <p class="form-intro">
+            Completá los datos para sumar una nueva preparación al recetario.
+        </p>
+
+
+        <!-- FORMULARIO -->
+        <form id="recipeForm">
+
+            <label for="recipeName">
+                Nombre de la receta
+            </label>
+
+            <input
+                id="recipeName"
+                name="nombre"
+                type="text"
+                maxlength="100"
+                placeholder="Ej.: Tarta de verduras"
+                required>
+
+
+            <label for="recipeCategory">
+                Categoría
+            </label>
+
+            <select
+                id="recipeCategory"
+                name="categoria"
+                required>
+
+                <option value="Comidas">Comidas</option>
+
+                <option value="Postres">Postres</option>
+
+                <option value="Desayunos">Desayunos</option>
+
+                <option value="Bebidas">Bebidas</option>
+
+            </select>
+
+
+            <label for="recipeIngredients">
+                Ingredientes
+            </label>
+
+            <textarea
+                id="recipeIngredients"
+                name="ingredientes"
+                rows="4"
+                maxlength="3000"
+                placeholder="Escribí un ingrediente por línea..."
+                required></textarea>
+
+            <span class="field-hint">
+                Escribí cada ingrediente en una línea distinta.
+            </span>
+
+
+            <label for="recipePreparation">
+                Preparación
+            </label>
+
+            <textarea
+                id="recipePreparation"
+                name="preparacion"
+                rows="5"
+                maxlength="5000"
+                placeholder="Escribí los pasos de preparación, uno por línea..."
+                required></textarea>
+
+            <span class="field-hint">
+                Escribí cada paso en una línea distinta.
+            </span>
+
+
+            <p class="form-message" id="formMessage" role="alert"></p>
+
+
+            <div class="modal-actions">
+
+                <button
+                    class="button button-secondary"
+                    id="cancelAddBtn"
+                    type="button">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    class="button button-primary"
+                    id="saveRecipeBtn"
+                    type="submit">
+
+                    Guardar receta
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </dialog>
+
+
+    <!-- MENSAJE DE CONFIRMACIÓN -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</body>
+
+</html>
